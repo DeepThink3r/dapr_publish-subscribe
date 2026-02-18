@@ -12,7 +12,9 @@ O projeto utiliza o building block de **Publish/Subscribe** do Dapr para garanti
 2.  **Broker (Redis):** Atua como o componente de infraestrutura para mensageria, gerenciando o tráfego de dados entre os serviços.
 3.  **Consumer (`consumer.py`):** Um serviço FastAPI que subscreve ao tópico, processa as leituras e realiza o push dos dados para o dashboard.
 
-![alt text](image.png)
+
+<img width="1448" height="352" alt="dapr_publisher-subscribe drawio" src="https://github.com/user-attachments/assets/948f0ad9-4b23-47ff-b104-1dca9f6f80f7" />
+
 
 ## 🚀 Tecnologias Utilizadas
 
