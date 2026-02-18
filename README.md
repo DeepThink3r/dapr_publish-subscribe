@@ -58,9 +58,15 @@ dapr dashboard -p 8080
 ## Monitor no Power BI
 Os dados consumidos no broker pelo consumer.py são enviados diretamente para um conjunto de dados stream do Power BI assim como o projeto anterior.
 
-<img width="278" height="436" alt="image" src="https://github.com/user-attachments/assets/38780b8e-d24a-4fdf-8f7c-710c06c71748" />
-
-
-<img width="722" height="406" alt="image" src="https://github.com/user-attachments/assets/aca1705d-8afb-4f76-8c45-f5a4482dce0d" />
+<table>
+  <tr>
+    <td valign="top">
+      <img src="https://github.com/user-attachments/assets/38780b8e-d24a-4fdf-8f7c-710c06c71748" alt="Mobile View" width="278" />
+    </td>
+    <td valign="top">
+      <img src="https://github.com/user-attachments/assets/aca1705d-8afb-4f76-8c45-f5a4482dce0d" alt="Desktop View" width="722" />
+    </td>
+  </tr>
+</table>
 
 
