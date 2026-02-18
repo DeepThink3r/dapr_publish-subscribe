@@ -8,7 +8,7 @@ Este projeto demonstra a implementação de uma arquitetura de microsserviços d
 
 O projeto utiliza o building block de **Publish/Subscribe** do Dapr para garantir escalabilidade e resiliência:
 
-1.  **Publisher (`producer.py`):** Simula ou coleta dados de sensores industriais e os publica no tópico `leituras-caldeira` através do sidecar do Dapr.
+1.  **Publisher (`producer.py`):** Coleta dados de sensores modbus industriais e os publica no tópico `leituras-caldeira` através do sidecar do Dapr.
 2.  **Broker (Redis):** Atua como o componente de infraestrutura para mensageria, gerenciando o tráfego de dados entre os serviços.
 3.  **Consumer (`consumer.py`):** Um serviço FastAPI que subscreve ao tópico, processa as leituras e realiza o push dos dados para o dashboard.
 
