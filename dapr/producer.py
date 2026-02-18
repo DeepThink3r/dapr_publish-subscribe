@@ -30,7 +30,7 @@ def publicar_no_dapr(temp, pressao, vazao):
         "vazao": vazao
     }
     try:
-        # Enviamos para o SIDECAR, não para o banco
+        # Enviamos para os dados para o SIDECAR
         response = requests.post(DAPR_URL, json=payload)
         if response.status_code == 204:
             logging.info(f"Publicado no Dapr: {payload}")
@@ -47,7 +47,6 @@ def coletar_e_enviar():
         pressao_final = regs[1] / 100.0
         vazao_final = regs[2] / 10.0
         
-        # O trabalho do Publisher termina aqui
         publicar_no_dapr(temp_final, pressao_final, vazao_final)
     else:
         logging.error("Falha na leitura Modbus")
