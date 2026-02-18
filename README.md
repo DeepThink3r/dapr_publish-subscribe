@@ -29,7 +29,7 @@ Certifique-se de ter o [Dapr CLI](https://docs.dapr.io/getting-started/install-d
 
 ## Comandos utilizados
 
-- Para instalar o dapr no Mac:
+- Para instalar o Dapr no Mac:
 ````CLI
 brew install dapr/tap/dapr-cli
 ````
