@@ -52,8 +52,9 @@ def coletar_e_enviar():
         logging.error("Falha na leitura Modbus")
 
 
+# Este recurso faz com que o SIDECAR faça uma REQUISIÇÃO a cada 5 segundos nesse endpoint para executa-lo
 @app.post("/agendador-caldeira")
-def trigger_event():
+def gatilho_evento():
     logging.info("Sinal de agendamento recebido do Dapr.")
     coletar_e_enviar()
 
