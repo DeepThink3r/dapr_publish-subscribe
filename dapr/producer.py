@@ -1,5 +1,5 @@
 import os
-import time
+from datetime import datetime
 import logging
 from fastapi import FastAPI
 import requests
@@ -30,6 +30,7 @@ cliente = ModbusClient(host='localhost', port=5020, auto_open=True)
 
 
 def publicar_no_dapr(payload):
+    
     try:
         # Enviamos para os dados para o SIDECAR
         response = requests.post(DAPR_URL, json=payload)
@@ -42,28 +43,29 @@ def publicar_no_dapr(payload):
 
 
 def coletar_e_enviar():
+    agora = datetime.now().isoformat()
+    batch_payload = []
+
     for caldeira in CALDEIRAS_CONFIG:
         regs = cliente.read_holding_registers(caldeira["offset"], 3)
 
         if regs:
-            payload = {
-                "id": caldeira["id"],
+            batch_payload.append({
+                "sensor_id": caldeira["id"],
                 "temperatura": regs[0]/10,
                 "pressao": regs[1]/100,
-                "vazao": regs[2]/10
-            }
+                "vazao": regs[2]/10,
+                "timestamp": agora
+            })
             
-            publicar_no_dapr(payload)
+            publicar_no_dapr(batch_payload)
         else:
             logging.error(f"Falha na leitura da {caldeira['id']} no offset {caldeira['offset']}")
 
 
-# Este recurso faz com que o SIDECAR faça uma REQUISIÇÃO a cada 5 segundos nesse endpoint para executa-lo
 @app.post("/agendador-caldeira")
 def gatilho_evento():
-    logging.info("Sinal de agendamento recebido do Dapr.")
     coletar_e_enviar()
-
     return {"status": "coleta_iniciada"}
 
 
