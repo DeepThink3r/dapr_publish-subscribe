@@ -21,27 +21,40 @@ class ServidorCaldeira():
             logging.info(f"Servidor Caldeira ativo em {self._server.host}:{self._server.port}")
 
             while True:
-                # Usando endereços 0, 1 e 2 (que o Master lerá como 40001, 40002 e 40003)
-                    base_temp = 4800 # 480.0 °C
-                    temp = base_temp + random.randint(-20, 20)
-                    self._db.set_holding_registers(0, [temp])
+                # --- Caldeira 01 (Registros de 0 a 2) ---
+                c1_data = [
+                    4800 + random.randint(-20, 20), # Temp
+                    6000 + random.randint(-15, 15), # Pressão
+                    1800 + random.randint(-100, 100) # Vazão
+                ]
+                # Carrega os dados para a memória do servidor
+                self._db.set_holding_registers(0, c1_data)
 
-                    base_pressao = 6000 # 60.00 bar
-                    pressao = base_pressao + random.randint(-15, 15)
-                    self._db.set_holding_registers(1, [pressao])
+                # --- Caldeira 02 (Registros de 10 a 12)
+                c2_data = [
+                    5200 + random.randint(-30, 30),
+                    800 + random.randint(-10, 10),
+                    1500 + random.randint(-50, 50)
+                ]
+                self._db.set_holding_registers(10, c2_data)
+
+                # --- CALDEIRA 03 (Endereço 20) ---
+                c3_data = [
+                    6100 + random.randint(-40, 40), 
+                    6200 + random.randint(-20, 20), 
+                    2000 + random.randint(-120, 120)
+                ]
+                self._db.set_holding_registers(20, c3_data)
 
 
-                    base_vazao = 1800 # 180.0 m³/min
-                    vazao = base_vazao + random.randint(-100, 100)
-                    self._db.set_holding_registers(2, [vazao])
+                logging.info(
+                    f"Ciclo Completo | "
+                    f"C1: {c1_data[0]/10}°C, {c1_data[1]/100}bar, {c1_data[2]/10}m³/m | "
+                    f"C2: {c2_data[0]/10}°C, {c2_data[1]/100}bar, {c2_data[2]/10}m³/m | "
+                    f"C3: {c3_data[0]/10}°C, {c3_data[1]/100}bar, {c3_data[2]/10}m³/m"
+                    )
 
-                    print('----STATUS DA CALDEIRA----')
-                    print(f'Temp (40001): {temp/10.0} °C')
-                    print(f'Pressao (40002): {pressao/100.0} bar')
-                    print(f'Vazao (40003): {vazao/10.0} m³/min')
-                    print('--------------------------')
-
-                    sleep(10)
+                sleep(10)
 
         except Exception as erro:
             logging.error("Erro na execução do servidor:", erro)
@@ -49,6 +62,9 @@ class ServidorCaldeira():
 
 
 if __name__ == "__main__":
-    srv = ServidorCaldeira(host_ip='0.0.0.0', port=5020)
-    #srv = ServidorCaldeira(host_ip='127.0.0.1', port=5020)
-    srv.execute()
+    try:
+        srv = ServidorCaldeira(host_ip='0.0.0.0', port=5020)
+        #srv = ServidorCaldeira(host_ip='127.0.0.1', port=5020)
+        srv.execute()
+    except KeyboardInterrupt:
+        print("\n[!] Finalizando o servidor Modbus...")
