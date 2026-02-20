@@ -19,16 +19,17 @@ PUBSUB_NAME = "industrial-pubsub"
 TOPIC_NAME = "leituras-caldeira"
 DAPR_URL = f"http://localhost:{DAPR_PORT}/v1.0/publish/{PUBSUB_NAME}/{TOPIC_NAME}"
 
+CALDEIRAS_CONFIG = [
+    {"id": "Caldeira_01", "offset": 0},
+    {"id": "Caldeira_02", "offset": 10},
+    {"id": "Caldeira_03", "offset": 20}
+]
+
 # Cliente modbus
 cliente = ModbusClient(host='localhost', port=5020, auto_open=True)
 
 
-def publicar_no_dapr(temp, pressao, vazao):
-    payload = {
-        "temperatura": temp,
-        "pressao": pressao,
-        "vazao": vazao
-    }
+def publicar_no_dapr(payload):
     try:
         # Enviamos para os dados para o SIDECAR
         response = requests.post(DAPR_URL, json=payload)
@@ -41,15 +42,20 @@ def publicar_no_dapr(temp, pressao, vazao):
 
 
 def coletar_e_enviar():
-    regs = cliente.read_holding_registers(0, 3)
-    if regs:
-        temp_final = regs[0] / 10.0
-        pressao_final = regs[1] / 100.0
-        vazao_final = regs[2] / 10.0
-        
-        publicar_no_dapr(temp_final, pressao_final, vazao_final)
-    else:
-        logging.error("Falha na leitura Modbus")
+    for caldeira in CALDEIRAS_CONFIG:
+        regs = cliente.read_holding_registers(caldeira["offset"], 3)
+
+        if regs:
+            payload = {
+                "id": caldeira["id"],
+                "temperatura": regs[0]/10,
+                "pressao": regs[1]/100,
+                "vazao": regs[2]/10
+            }
+            
+            publicar_no_dapr(payload)
+        else:
+            logging.error(f"Falha na leitura da {caldeira['id']} no offset {caldeira['offset']}")
 
 
 # Este recurso faz com que o SIDECAR faça uma REQUISIÇÃO a cada 5 segundos nesse endpoint para executa-lo
