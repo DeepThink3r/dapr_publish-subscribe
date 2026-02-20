@@ -1,9 +1,9 @@
 import httpx
 import os
+import logging
 import uvicorn
 from fastapi import FastAPI, Body
 from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -15,6 +15,11 @@ app.add_middleware(
     allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
 PBI_ENDPOINT = os.getenv('POWER_BI_URL')
@@ -33,25 +38,16 @@ async def processar_leituras(event = Body(...)):
     leituras = event.get("data")
 
     if leituras:
-        agora = datetime.now() 
-        timestamp_pbi = agora.isoformat()
-        payload_pbi = [
-            {
-                "40001_Temp": float(leituras.get('temperatura', 0)),
-                "40002_Pressao": float(leituras.get('pressao', 0)),
-                "40003_vazao": float(leituras.get('vazao', 0)),
-                "timestmp": timestamp_pbi
-            }
-        ]
         async with httpx.AsyncClient() as client:
             try:
-                response = await client.post(PBI_ENDPOINT, json=payload_pbi)
+                response = await client.post(PBI_ENDPOINT, json=leituras)
                 if response.status_code == 200:
-                    print(f"Enviado: {timestamp_pbi} | Status: {response.status_code}", flush=True)
+                    logging.info(f"Lote enviado com sucesso! ({len(leituras)} registros)")
                 else:
-                    print(f"Erro PBI: {response.status_code} - {response.text}", flush=True)
+                    logging.error(f"Erro PBI: {response.status_code} - {response.text}")
+
             except Exception as e:
-                print(f"Falha de rede: {e}", flush=True)
+                logging.error(f"Falha de rede: {e}")
 
     return {"status": "SUCCESS"}
 
