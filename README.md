@@ -56,7 +56,7 @@ Os dados consumidos no broker pelo consumer.py são enviados diretamente para um
 <table>
   <tr>
     <td valign="top">
-      <img src="https://github.com/user-attachments/assets/38780b8e-d24a-4fdf-8f7c-710c06c71748" alt="Mobile View" width="278" />
+      <img width="549" height="884" alt="image" src="https://github.com/user-attachments/assets/a5c9805b-d581-4d84-919d-13b4e19222ef" />
     </td>
     <td valign="top">
       <img width="1195" height="672" alt="image" src="https://github.com/user-attachments/assets/39b78b96-c959-4682-b963-edf6bbc93f3c" />
