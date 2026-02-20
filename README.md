@@ -42,16 +42,9 @@ dapr init
 ```
 - Uma vez iniciado. Para rodar os scripts do producer e do consumer, execute os seguintes comandos:
 ```CLI
-dapr run --app-id service-publisher \                                                 
-         --app-port 8000 \
-         --resources-path ./components \
-         --resources-path ./components/jobs \
-         -- python3 producer.py
+dapr run --app-id service-publisher --app-port 8000 --resources-path ./components --resources-path ./components/jobs -- python3 producer.py
 
-dapr run --app-id service-consumer \
-         --app-port 8001 \
-         --resources-path ./components \
-         -- python3 consumer.py
+dapr run --app-id service-consumer --app-port 8001 --resources-path ./components -- python3 consumer.py
 ````
 - Para visualizar os aplicativos ativos:
 ```CLI
@@ -66,7 +59,7 @@ Os dados consumidos no broker pelo consumer.py são enviados diretamente para um
       <img src="https://github.com/user-attachments/assets/38780b8e-d24a-4fdf-8f7c-710c06c71748" alt="Mobile View" width="278" />
     </td>
     <td valign="top">
-      <img src="https://github.com/user-attachments/assets/aca1705d-8afb-4f76-8c45-f5a4482dce0d" alt="Desktop View" width="722" />
+      <img width="1195" height="672" alt="image" src="https://github.com/user-attachments/assets/39b78b96-c959-4682-b963-edf6bbc93f3c" />
     </td>
   </tr>
 </table>
